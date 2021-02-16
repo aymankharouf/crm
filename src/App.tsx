@@ -5,12 +5,10 @@ import Login from './pages/login';
 import Home from './pages/home';
 import axios from 'axios'
 
-axios.defaults.baseURL = window.location.hostname === 'localhost' ? process.env.REACT_APP_DEV_URL : process.env.REACT_APP_PROD_URL
+axios.defaults.baseURL = window.location.hostname === 'localhost' ? 'http://localhost:5000/api' : 'https://first-express-orm.herokuapp.com/api'
 axios.defaults.withCredentials = true
 
 function App() {
-  console.log('url = ', process.env.REACT_APP_PROD_URL)
-  console.log('location = ', window.location.hostname)
   return (
     <BrowserRouter>
       <Switch>
