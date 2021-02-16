@@ -63,7 +63,7 @@ const Login = () => {
         <form onSubmit={handleSubmit}>
           <Box mb={3}>
             <Typography color="textPrimary" variant="h2">
-              Sign up
+              Sign in
             </Typography>
           </Box>
           <TextField
@@ -109,7 +109,7 @@ const Login = () => {
               type="submit"
               variant="contained"
             >
-              Sign up now
+              Sign in
             </Button>
           </Box>
           <Typography color="textSecondary">

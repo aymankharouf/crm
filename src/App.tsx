@@ -9,6 +9,8 @@ axios.defaults.baseURL = window.location.hostname === 'localhost' ? process.env.
 axios.defaults.withCredentials = true
 
 function App() {
+  console.log('url = ', process.env.REACT_APP_PROD_URL)
+  console.log('location = ', window.location.hostname)
   return (
     <BrowserRouter>
       <Switch>
