@@ -7,7 +7,7 @@ import MyAppBar from './components/my-app-bar'
 import axios from 'axios'
 import Store from './data/store'
 
-axios.defaults.baseURL = window.location.hostname === 'localhost' ? 'http://localhost:5000/api' : '/api'
+//axios.defaults.baseURL = window.location.hostname === 'localhost' ? 'http://localhost:5000/' : 
 axios.defaults.withCredentials = true
 
 const App = () => {
