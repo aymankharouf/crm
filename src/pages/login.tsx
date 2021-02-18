@@ -1,4 +1,4 @@
-import { useState, FormEvent } from 'react';
+import { useState, FormEvent, useContext } from 'react';
 import { Link as RouterLink, useHistory } from 'react-router-dom'
 import Box from '@material-ui/core/Box'
 import Button from '@material-ui/core/Button'
@@ -14,6 +14,7 @@ import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import Grid from '@material-ui/core/Grid';
 import axios from 'axios'
+import { StoreContext } from '../data/store'
 
 interface errorType {
   email?: string,
@@ -24,18 +25,38 @@ interface userType {
   email: string,
 }
 const Login = () => {
+  const { dispatch } = useContext(StoreContext)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [errors, setErrors] = useState<errorType>({})
+  const [waiting, setWaiting] = useState(false)
   const history = useHistory()
   const handleSubmit = async (event: FormEvent) => {
     try {
       event.preventDefault()
-      await axios.post('/auth/login', {email, password})
+      setWaiting(true)
+      // let user = {email, password}
+      // console.log('user = ', user)
+      const user = await axios.post('/auth/login', {email, password})
+      // const response = await fetch('http://localhost:5000/api/auth/login', {
+      //   method: 'POST',
+      //   mode: 'cors',
+      //   credentials: 'include',
+      //   headers: {
+      //     'Content-Type': 'application/json;charset=utf-8',
+      //     Authentication: 'secret'
+      //   },
+      //   body: JSON.stringify(user)
+      // })
+      // let result = await response.json();
+      dispatch({type: 'LOGIN', payload: user})
+      setWaiting(false)
       history.push('/')
     }catch (err) {
-      setErrors(err.response.data.errors)
+      console.error('error === ', err)
+      setWaiting(false)
+      setErrors(err.response?.data.errors)
     }
   }
   const handleEmailChange = (value: string) => {
@@ -103,7 +124,7 @@ const Login = () => {
           <Box my={2}>
             <Button
               color="primary"
-              disabled={Boolean(!email || !password || Object.keys(errors).length > 0)}
+              disabled={Boolean(!email || !password || (errors && Object.keys(errors).length > 0))}
               fullWidth
               size="large"
               type="submit"
@@ -113,7 +134,7 @@ const Login = () => {
             </Button>
           </Box>
           <Typography color="textSecondary">
-            Haven't an account?{' '}
+            New user?{' '}
             <Link component={RouterLink} to="/register" variant="h6">
               Sign up
             </Link>

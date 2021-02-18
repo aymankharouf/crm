@@ -1,4 +1,4 @@
-import { useState, FormEvent } from 'react';
+import { useState, useContext, FormEvent } from 'react';
 import { Link as RouterLink, useHistory } from 'react-router-dom'
 import Box from '@material-ui/core/Box'
 import Button from '@material-ui/core/Button'
@@ -14,6 +14,7 @@ import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import Grid from '@material-ui/core/Grid';
 import axios from 'axios'
+import { StoreContext } from '../data/store'
 
 interface errorType {
   name?: string,
@@ -25,16 +26,22 @@ interface userType {
   email: string,
 }
 const Register = () => {
+  const { dispatch } = useContext(StoreContext)
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [errors, setErrors] = useState<errorType>({})
   const history = useHistory()
+  const [waiting, setWaiting] = useState(false)
+
   const handleSubmit = async (event: FormEvent) => {
     try {
       event.preventDefault()
-      await axios.post('/auth/register', {name, email, password})
+      setWaiting(true)
+      const user = await axios.post('/auth/register', {name, email, password})
+      dispatch({type: 'LOGIN', payload: user})
+      setWaiting(false)
       history.push('/')
     }catch (err) {
       setErrors(err.response.data.errors)
