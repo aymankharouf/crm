@@ -38,7 +38,7 @@ const Login = () => {
       setWaiting(true)
       // let user = {email, password}
       // console.log('user = ', user)
-      const user = await axios.post('/auth/login', {email, password})
+      const user = await axios.post('https://first-express-orm.herokuapp.com/api/auth/login', {email, password})
       // const response = await fetch('http://localhost:5000/api/auth/login', {
       //   method: 'POST',
       //   mode: 'cors',
