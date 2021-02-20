@@ -1,22 +1,22 @@
 {
   "files": {
     "main.css": "/crm/static/css/main.8c8b27cf.chunk.css",
-    "main.js": "/crm/static/js/main.59ee7f1c.chunk.js",
-    "main.js.map": "/crm/static/js/main.59ee7f1c.chunk.js.map",
+    "main.js": "/crm/static/js/main.6e3bb279.chunk.js",
+    "main.js.map": "/crm/static/js/main.6e3bb279.chunk.js.map",
     "runtime-main.js": "/crm/static/js/runtime-main.0ea03935.js",
     "runtime-main.js.map": "/crm/static/js/runtime-main.0ea03935.js.map",
-    "static/js/2.4a32662a.chunk.js": "/crm/static/js/2.4a32662a.chunk.js",
-    "static/js/2.4a32662a.chunk.js.map": "/crm/static/js/2.4a32662a.chunk.js.map",
+    "static/js/2.809707c0.chunk.js": "/crm/static/js/2.809707c0.chunk.js",
+    "static/js/2.809707c0.chunk.js.map": "/crm/static/js/2.809707c0.chunk.js.map",
     "static/js/3.49e3116a.chunk.js": "/crm/static/js/3.49e3116a.chunk.js",
     "static/js/3.49e3116a.chunk.js.map": "/crm/static/js/3.49e3116a.chunk.js.map",
     "index.html": "/crm/index.html",
     "static/css/main.8c8b27cf.chunk.css.map": "/crm/static/css/main.8c8b27cf.chunk.css.map",
-    "static/js/2.4a32662a.chunk.js.LICENSE.txt": "/crm/static/js/2.4a32662a.chunk.js.LICENSE.txt"
+    "static/js/2.809707c0.chunk.js.LICENSE.txt": "/crm/static/js/2.809707c0.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.0ea03935.js",
-    "static/js/2.4a32662a.chunk.js",
+    "static/js/2.809707c0.chunk.js",
     "static/css/main.8c8b27cf.chunk.css",
-    "static/js/main.59ee7f1c.chunk.js"
+    "static/js/main.6e3bb279.chunk.js"
   ]
 }
