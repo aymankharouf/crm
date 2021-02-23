@@ -45,7 +45,6 @@ const MyAppBar = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const menuOpen = Boolean(anchorEl);
   const [drawerOpen, setDrawerOpen] = useState(false)
-  const [waiting, setWaiting] = useState(false)
 
   const handleMenu = (event: MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -54,21 +53,17 @@ const MyAppBar = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
-  const handleLogout = async () => {
-    setWaiting(true)
-    await axios.get('/auth/logout')
+  const logout = () => {
+    axios.defaults.headers.common = {'Authorization': ''}
     dispatch({type: 'LOGOUT'})
-    setWaiting(false)
+    localStorage.removeItem('token')
+  }
+  const handleLogout = () => {
+    logout()
     setAnchorEl(null);
   };
   const handleLogin = async () => {
-    if (state.user) {
-      setWaiting(true)
-      await axios.get('/auth/logout')
-      dispatch({type: 'LOGOUT'})
-      setWaiting(false)
-    }
+    if (state.user) logout()
     else history.push('/login')
   }
   return (

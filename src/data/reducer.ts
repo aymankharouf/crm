@@ -5,12 +5,12 @@ const Reducer = (state: iState, action: iAction) => {
     case 'LOGIN':
       return {
         ...state,
-        user: action.payload
+        user: action.payload,
       }
     case 'LOGOUT':
       return {
         ...state,
-        user: undefined
+        user: undefined,
       }
     default:
       return state

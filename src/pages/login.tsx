@@ -13,8 +13,9 @@ import InputAdornment from '@material-ui/core/InputAdornment'
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import Grid from '@material-ui/core/Grid';
-import axios from 'axios'
 import { StoreContext } from '../data/store'
+import { saveToken } from '../data/actions'
+import axios from 'axios'
 
 interface errorType {
   email?: string,
@@ -36,24 +37,13 @@ const Login = () => {
     try {
       event.preventDefault()
       setWaiting(true)
-      // let user = {email, password}
-      // console.log('user = ', user)
-      const user = await axios.post('https://first-express-orm.herokuapp.com/api/auth/login', {email, password})
-      // const response = await fetch('http://localhost:5000/api/auth/login', {
-      //   method: 'POST',
-      //   mode: 'cors',
-      //   credentials: 'include',
-      //   headers: {
-      //     'Content-Type': 'application/json;charset=utf-8',
-      //   },
-      //   body: JSON.stringify(user)
-      // })
-      // let result = await response.json();
-      dispatch({type: 'LOGIN', payload: user})
+      const response = await axios.post('/auth/login', {email, password})
+      dispatch({type: 'LOGIN', payload: response.data.user})
+      saveToken(response.data.token)
+      axios.defaults.headers.common = {'Authorization': `Bearer ${response.data.token}`}
       setWaiting(false)
       history.push('/')
     }catch (err) {
-      console.error('error === ', err)
       setWaiting(false)
       setErrors(err.response?.data.errors)
     }

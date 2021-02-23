@@ -8,7 +8,6 @@ import axios from 'axios'
 import Store from './data/store'
 
 axios.defaults.baseURL = window.location.hostname === 'localhost' ? 'http://localhost:5000/api' : 'https://first-express-orm.herokuapp.com/api'
-axios.defaults.withCredentials = true
 
 const App = () => {
   return (
