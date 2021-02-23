@@ -16,6 +16,8 @@ import Grid from '@material-ui/core/Grid';
 import { StoreContext } from '../data/store'
 import { saveToken } from '../data/actions'
 import axios from 'axios'
+import CircularProgress from '@material-ui/core/CircularProgress'
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 
 interface errorType {
   email?: string,
@@ -25,8 +27,21 @@ interface userType {
   name: string,
   email: string,
 }
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    buttonProgress: {
+      position: 'absolute',
+      top: '50%',
+      left: '50%',
+      marginTop: -12,
+      marginLeft: -12,
+    },
+  }),
+);
+
 const Login = () => {
   const { dispatch } = useContext(StoreContext)
+  const classes = useStyles();
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
@@ -68,8 +83,8 @@ const Login = () => {
   }
   return (
     <Grid container>
-      <Grid item xs={3}></Grid>
-      <Grid item xs={6}>
+      <Grid item xs={1} sm={3} />
+      <Grid item xs={10} sm={6}>
         <form onSubmit={handleSubmit}>
           <Box mb={3}>
             <Typography color="textPrimary" variant="h2">
@@ -110,10 +125,10 @@ const Login = () => {
             }
             />
           </FormControl>
-          <Box my={2}>
+          <Box my={2} style={{position: 'relative'}}>
             <Button
               color="primary"
-              disabled={Boolean(!email || !password || (errors && Object.keys(errors).length > 0))}
+              disabled={waiting || Boolean(!email || !password || (errors && Object.keys(errors).length > 0))}
               fullWidth
               size="large"
               type="submit"
@@ -121,6 +136,7 @@ const Login = () => {
             >
               Sign in
             </Button>
+            {waiting && <CircularProgress size={24} className={classes.buttonProgress} />}
           </Box>
           <Typography color="textSecondary">
             New user?{' '}
@@ -130,7 +146,7 @@ const Login = () => {
           </Typography>
         </form>
       </Grid>
-      <Grid item xs={3}></Grid>
+      <Grid item xs={1} sm={3} />
     </Grid>
   );
 };

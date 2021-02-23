@@ -57,6 +57,7 @@ const MyAppBar = () => {
     axios.defaults.headers.common = {'Authorization': ''}
     dispatch({type: 'LOGOUT'})
     localStorage.removeItem('token')
+    history.push('/login')
   }
   const handleLogout = () => {
     logout()
