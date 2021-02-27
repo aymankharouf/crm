@@ -98,15 +98,17 @@ const Login = () => {
             label="Email Address"
             margin="normal"
             name="email"
+            data-testid="email"
             onChange={e => handleEmailChange(e.target.value)}
             type="email"
             value={email}
             variant="outlined"
           />
           <FormControl fullWidth variant="outlined" style={{marginTop: '1em'}}>
-            <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
+            <InputLabel htmlFor="password">Password</InputLabel>
             <OutlinedInput
-            id="outlined-adornment-password"
+            id="password"
+            data-testid="password"
             type={showPassword ? 'text' : 'password'}
             value={password}
             labelWidth={70}
@@ -133,6 +135,7 @@ const Login = () => {
               size="large"
               type="submit"
               variant="contained"
+              data-testid="button"
             >
               Sign in
             </Button>

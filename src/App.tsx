@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import Register from './pages/register';
 import Login from './pages/login';
 import Home from './pages/home';
+import NotFound from './pages/not-found';
 import MyAppBar from './components/my-app-bar'
 import axios from 'axios'
 import Store from './data/store'
@@ -18,6 +19,7 @@ const App = () => {
           <Route path="/" exact component={Home}/>
           <Route path="/register" component={Register}/>
           <Route path="/login" component={Login}/>
+          <Route path="*" component={NotFound}/>
         </Switch>
       </BrowserRouter>
     </Store>
