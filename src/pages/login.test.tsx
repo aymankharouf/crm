@@ -11,7 +11,7 @@ test('renders login page ', () => {
       <Login />
     </Router>
   )
-  expect(screen.getByTestId('button')).toBeDisabled()
+  expect(screen.getByTestId('button')).toBeEnabled()
 });
 
 
