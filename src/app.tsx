@@ -8,6 +8,7 @@ import Reducer from './data/reducer'
 import { iContext } from './data/interfaces'
 import { getToken } from './data/actions'
 import './app.css';
+import CircularProgress from '@material-ui/core/CircularProgress'
 
 const Register = lazy(() => import('./pages/register'));
 const Login = lazy(() => import('./pages/login'));
@@ -36,7 +37,7 @@ const App = () => {
     getUser()
   }, [])
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<CircularProgress size={40} style={{ margin: '100px auto' }} />}>
       <AppContext.Provider value={{state, dispatch}}>
         <QueryClientProvider client={queryClient}>
           <BrowserRouter>
