@@ -13,7 +13,7 @@ import InputAdornment from '@material-ui/core/InputAdornment'
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import Grid from '@material-ui/core/Grid';
-import { StoreContext } from '../data/store'
+import { AppContext } from '../app'
 import { saveToken } from '../data/actions'
 import axios from 'axios'
 import CircularProgress from '@material-ui/core/CircularProgress'
@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const Login = () => {
-  const { dispatch } = useContext(StoreContext)
+  const { dispatch } = useContext(AppContext)
   const classes = useStyles();
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')

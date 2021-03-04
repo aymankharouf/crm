@@ -14,7 +14,7 @@ import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import Grid from '@material-ui/core/Grid';
 import axios from 'axios'
-import { StoreContext } from '../data/store'
+import { AppContext } from '../app'
 
 interface errorType {
   name?: string,
@@ -26,7 +26,7 @@ interface userType {
   email: string,
 }
 const Register = () => {
-  const { dispatch } = useContext(StoreContext)
+  const { dispatch } = useContext(AppContext)
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')

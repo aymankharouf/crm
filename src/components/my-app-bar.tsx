@@ -16,7 +16,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import { useHistory } from 'react-router-dom'
-import { StoreContext } from '../data/store'
+import { AppContext } from '../app'
 import axios from 'axios'
 
 
@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) =>
 const MyAppBar = () => {
   const classes = useStyles();
   const history = useHistory()
-  const { state, dispatch } = useContext(StoreContext)
+  const { state, dispatch } = useContext(AppContext)
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const menuOpen = Boolean(anchorEl);
   const [drawerOpen, setDrawerOpen] = useState(false)
