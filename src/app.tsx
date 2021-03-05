@@ -9,6 +9,7 @@ import { iContext } from './data/interfaces'
 import { getToken } from './data/actions'
 import './app.css';
 import CircularProgress from '@material-ui/core/CircularProgress'
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 
 const Register = lazy(() => import('./pages/register'));
 const Login = lazy(() => import('./pages/login'));
@@ -19,8 +20,20 @@ axios.defaults.baseURL = window.location.hostname === 'localhost' ? 'http://loca
 export const AppContext = createContext({} as iContext)
 const queryClient = new QueryClient()
 
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    flexContainer: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      height: '100vh'
+    },
+  }),
+);
+
 const App = () => {
   const [state, dispatch] = useReducer(Reducer, {})
+  const classes = useStyles();
   const history = useHistory()
   useEffect(() => {
     const getUser = async () => {
@@ -39,7 +52,7 @@ const App = () => {
     getUser()
   }, [])
   return (
-    <Suspense fallback={<CircularProgress size={40} style={{margin: '100px auto'}} />}>
+    <Suspense fallback={<div className={classes.flexContainer}><CircularProgress size={100} /></div>}>
       <AppContext.Provider value={{state, dispatch}}>
         <QueryClientProvider client={queryClient}>
           <BrowserRouter>
