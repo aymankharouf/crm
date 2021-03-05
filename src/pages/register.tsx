@@ -109,7 +109,7 @@ const Register = () => {
             variant="outlined"
           />
           <FormControl fullWidth variant="outlined" style={{marginTop: '1em'}}>
-            <InputLabel htmlFor="outlined-adornment-password" style={{color: errors?.password && 'red'}}>Password</InputLabel>
+            <InputLabel htmlFor="outlined-adornment-password" style={{ color: errors?.password && 'red'}}>Password</InputLabel>
             <OutlinedInput
               id="outlined-adornment-password"
               type={showPassword ? 'text' : 'password'}
