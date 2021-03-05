@@ -15,6 +15,7 @@ import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import Grid from '@material-ui/core/Grid';
 import axios from 'axios'
 import { AppContext } from '../app'
+import FormHelperText from '@material-ui/core/FormHelperText'
 
 interface errorType {
   name?: string,
@@ -49,30 +50,29 @@ const Register = () => {
   }
   const handleNameChange = (value: string) => {
     setName(value)
-    if (errors?.name) {
-      let newErrors: errorType = {}
-      Object.assign(newErrors, errors)
-      delete newErrors.name
-      setErrors(newErrors)
+    if (/\d/.test(value)) {
+      errors.name = 'name must not contain numbers'
+    } else if (value.length < 5) {
+      errors.name = 'name must be more than 4 characters'
+    } else {
+      errors.name = undefined
     }
+    setErrors(errors)
   }
   const handleEmailChange = (value: string) => {
     setEmail(value)
     if (errors?.email) {
-      let newErrors: errorType = {}
-      Object.assign(newErrors, errors)
-      delete newErrors.email
-      setErrors(newErrors)
+      setErrors({...errors, email: ''})
     }
   }
   const handlePasswordChange = (value: string) => {
     setPassword(value)
-    if (errors?.email) {
-      let newErrors: errorType = {}
-      Object.assign(newErrors, errors)
-      delete newErrors.password
-      setErrors(newErrors)
+    if (value.length < 5) {
+      errors.password = 'password must be more than 4 characters'
+    } else {
+      errors.password = undefined
     }
+    setErrors(errors)
   }
   return (
     <Grid container>
@@ -109,26 +109,28 @@ const Register = () => {
             variant="outlined"
           />
           <FormControl fullWidth variant="outlined" style={{marginTop: '1em'}}>
-            <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
+            <InputLabel htmlFor="outlined-adornment-password" style={{color: errors?.password && 'red'}}>Password</InputLabel>
             <OutlinedInput
-            id="outlined-adornment-password"
-            type={showPassword ? 'text' : 'password'}
-            value={password}
-            labelWidth={70}
-            onChange={e => handlePasswordChange(e.target.value)}
-            endAdornment={
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label="toggle password visibility"
-                  onClick={() => setShowPassword(!showPassword)}
-                  onMouseDown={e => e.preventDefault()}
-                  edge="end"
-                >
-                  {showPassword ? <Visibility /> : <VisibilityOff />}
-                </IconButton>
-              </InputAdornment>
-            }
+              id="outlined-adornment-password"
+              type={showPassword ? 'text' : 'password'}
+              value={password}
+              labelWidth={70}
+              onChange={e => handlePasswordChange(e.target.value)}
+              error={Boolean(errors?.password)}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={() => setShowPassword(!showPassword)}
+                    onMouseDown={e => e.preventDefault()}
+                    edge="end"
+                  >
+                    {showPassword ? <Visibility /> : <VisibilityOff />}
+                  </IconButton>
+                </InputAdornment>
+              }
             />
+            <FormHelperText id="filled-weight-helper-text" style={{color: 'red'}}>{errors?.password}</FormHelperText>
           </FormControl>
           <Box my={2}>
             <Button

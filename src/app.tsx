@@ -1,6 +1,6 @@
 import { createContext, useReducer, useEffect } from 'react'
 import { lazy, Suspense } from 'react'
-import { BrowserRouter, Route, Switch } from 'react-router-dom'
+import { BrowserRouter, Route, Switch, useHistory } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import MyAppBar from './components/my-app-bar'
 import axios from 'axios'
@@ -21,6 +21,7 @@ const queryClient = new QueryClient()
 
 const App = () => {
   const [state, dispatch] = useReducer(Reducer, {})
+  const history = useHistory()
   useEffect(() => {
     const getUser = async () => {
       try {
@@ -28,16 +29,17 @@ const App = () => {
         if (token) {
           axios.defaults.headers.common = {'Authorization': `Bearer ${token}`}
           const response = await axios.get('/auth/getUser')
-          if (response.data) dispatch({type: 'LOGIN', payload: response.data})
+          dispatch({type: 'LOGIN', payload: response.data})
         }
       } catch (err) {
         localStorage.removeItem('token')
+        history.push('/login')
       }
     }
     getUser()
   }, [])
   return (
-    <Suspense fallback={<CircularProgress size={40} style={{ margin: '100px auto' }} />}>
+    <Suspense fallback={<CircularProgress size={40} style={{margin: '100px auto'}} />}>
       <AppContext.Provider value={{state, dispatch}}>
         <QueryClientProvider client={queryClient}>
           <BrowserRouter>

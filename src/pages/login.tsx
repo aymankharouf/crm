@@ -1,4 +1,4 @@
-import { useState, FormEvent, useContext } from 'react';
+import { useState, FormEvent, useContext, useEffect } from 'react';
 import { Link as RouterLink, useHistory } from 'react-router-dom'
 import Box from '@material-ui/core/Box'
 import Button from '@material-ui/core/Button'
@@ -18,6 +18,8 @@ import { saveToken } from '../data/actions'
 import axios from 'axios'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import Snackbar from '@material-ui/core/Snackbar';
+import Alert from '@material-ui/lab/Alert';
 
 interface errorType {
   email?: string,
@@ -45,9 +47,12 @@ const Login = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
-  const [errors, setErrors] = useState<errorType>({})
+  const [error, setError] = useState('')
   const [waiting, setWaiting] = useState(false)
   const history = useHistory()
+  useEffect(() => {
+    if (error) setError('')
+  }, [email, password])
   const handleSubmit = async (event: FormEvent) => {
     try {
       event.preventDefault()
@@ -60,29 +65,16 @@ const Login = () => {
       history.push('/')
     }catch (err) {
       setWaiting(false)
-      setErrors(err.response?.data.errors)
-    }
-  }
-  const handleEmailChange = (value: string) => {
-    setEmail(value)
-    if (errors?.email) {
-      let newErrors: errorType = {}
-      Object.assign(newErrors, errors)
-      delete newErrors.email
-      setErrors(newErrors)
-    }
-  }
-  const handlePasswordChange = (value: string) => {
-    setPassword(value)
-    if (errors?.email) {
-      let newErrors: errorType = {}
-      Object.assign(newErrors, errors)
-      delete newErrors.password
-      setErrors(newErrors)
+      setError('Login Failed')
     }
   }
   return (
     <Grid container>
+      <Snackbar open={!!error}>
+        <Alert severity="error" variant="filled">
+          Login Failed
+        </Alert>
+      </Snackbar>
       <Grid item xs={1} sm={3} />
       <Grid item xs={10} sm={6}>
         <form onSubmit={handleSubmit}>
@@ -92,14 +84,12 @@ const Login = () => {
             </Typography>
           </Box>
           <TextField
-            error={Boolean(errors?.email)}
             fullWidth
-            helperText={errors?.email}
             label="Email Address"
             margin="normal"
             name="email"
             data-testid="email"
-            onChange={e => handleEmailChange(e.target.value)}
+            onChange={e => setEmail(e.target.value)}
             type="email"
             value={email}
             variant="outlined"
@@ -112,7 +102,7 @@ const Login = () => {
             type={showPassword ? 'text' : 'password'}
             value={password}
             labelWidth={70}
-            onChange={e => handlePasswordChange(e.target.value)}
+            onChange={e => setPassword(e.target.value)}
             endAdornment={
               <InputAdornment position="end">
                 <IconButton
@@ -130,7 +120,7 @@ const Login = () => {
           <Box my={2} style={{position: 'relative'}}>
             <Button
               color="primary"
-              disabled={waiting || Boolean(!email || !password || (errors && Object.keys(errors).length > 0))}
+              disabled={waiting || !email || !password || !!error}
               fullWidth
               size="large"
               type="submit"
