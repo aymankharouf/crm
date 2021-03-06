@@ -88,9 +88,9 @@ const Login = () => {
             label="Email Address"
             margin="normal"
             name="email"
-            data-testid="email"
             onChange={e => setEmail(e.target.value)}
             type="email"
+            aria-label="email"
             value={email}
             variant="outlined"
           />
@@ -98,7 +98,7 @@ const Login = () => {
             <InputLabel htmlFor="password">Password</InputLabel>
             <OutlinedInput
             id="password"
-            data-testid="password"
+            aria-label="password"
             type={showPassword ? 'text' : 'password'}
             value={password}
             labelWidth={70}
@@ -125,7 +125,6 @@ const Login = () => {
               size="large"
               type="submit"
               variant="contained"
-              data-testid="button"
             >
               Sign in
             </Button>
@@ -133,7 +132,7 @@ const Login = () => {
           </Box>
           <Typography color="textSecondary">
             New user?{' '}
-            <Link component={RouterLink} to="/register" variant="h6">
+            <Link component={RouterLink} to="/register" variant="h6" aria-label="signup">
               Sign up
             </Link>
           </Typography>

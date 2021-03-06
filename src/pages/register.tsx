@@ -16,6 +16,9 @@ import Grid from '@material-ui/core/Grid';
 import axios from 'axios'
 import { AppContext } from '../app'
 import FormHelperText from '@material-ui/core/FormHelperText'
+import { saveToken } from '../data/actions'
+import CircularProgress from '@material-ui/core/CircularProgress'
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 
 interface errorType {
   name?: string,
@@ -26,8 +29,20 @@ interface userType {
   name: string,
   email: string,
 }
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    buttonProgress: {
+      position: 'absolute',
+      top: '50%',
+      left: '50%',
+      marginTop: -12,
+      marginLeft: -12,
+    },
+  }),
+);
 const Register = () => {
   const { dispatch } = useContext(AppContext)
+  const classes = useStyles();
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -40,8 +55,10 @@ const Register = () => {
     try {
       event.preventDefault()
       setWaiting(true)
-      const user = await axios.post('/auth/register', {name, email, password})
-      dispatch({type: 'LOGIN', payload: user})
+      const response = await axios.post('/auth/register', {name, email, password})
+      dispatch({type: 'LOGIN', payload: response.data.user})
+      saveToken(response.data.token)
+      axios.defaults.headers.common = {'Authorization': `Bearer ${response.data.token}`}
       setWaiting(false)
       history.push('/')
     }catch (err) {
@@ -50,14 +67,15 @@ const Register = () => {
   }
   const handleNameChange = (value: string) => {
     setName(value)
+    let error
     if (/\d/.test(value)) {
-      errors.name = 'name must not contain numbers'
+      error = 'name must not contain numbers'
     } else if (value.length < 5) {
-      errors.name = 'name must be more than 4 characters'
+      error = 'name must be more than 4 characters'
     } else {
-      errors.name = undefined
+      error = ''
     }
-    setErrors(errors)
+    setErrors({...errors, name: error})
   }
   const handleEmailChange = (value: string) => {
     setEmail(value)
@@ -67,12 +85,13 @@ const Register = () => {
   }
   const handlePasswordChange = (value: string) => {
     setPassword(value)
+    let error
     if (value.length < 5) {
-      errors.password = 'password must be more than 4 characters'
+      error = 'password must be more than 4 characters'
     } else {
-      errors.password = undefined
+      error = ''
     }
-    setErrors(errors)
+    setErrors({...errors, password: error})
   }
   return (
     <Grid container>
@@ -89,6 +108,7 @@ const Register = () => {
             fullWidth
             helperText={errors?.name}
             label="Name"
+            aria-label="name"
             margin="normal"
             name="name"
             onChange={e => handleNameChange(e.target.value)}
@@ -101,6 +121,7 @@ const Register = () => {
             fullWidth
             helperText={errors?.email}
             label="Email Address"
+            aria-label="email"
             margin="normal"
             name="email"
             onChange={e => handleEmailChange(e.target.value)}
@@ -109,9 +130,10 @@ const Register = () => {
             variant="outlined"
           />
           <FormControl fullWidth variant="outlined" style={{marginTop: '1em'}}>
-            <InputLabel htmlFor="outlined-adornment-password" style={{ color: errors?.password && 'red'}}>Password</InputLabel>
+            <InputLabel htmlFor="password" style={{ color: errors?.password && 'red'}}>Password</InputLabel>
             <OutlinedInput
-              id="outlined-adornment-password"
+              id="password"
+              aria-label="password"
               type={showPassword ? 'text' : 'password'}
               value={password}
               labelWidth={70}
@@ -132,10 +154,10 @@ const Register = () => {
             />
             <FormHelperText id="filled-weight-helper-text" style={{color: 'red'}}>{errors?.password}</FormHelperText>
           </FormControl>
-          <Box my={2}>
+          <Box my={2} style={{position: 'relative'}}>
             <Button
               color="primary"
-              disabled={Boolean(!name || !email || !password || (errors && Object.keys(errors).length > 0))}
+              disabled={waiting || !name || !email || !password || Object.values(errors).some(e => e)}
               fullWidth
               size="large"
               type="submit"
@@ -143,6 +165,7 @@ const Register = () => {
             >
               Sign up now
             </Button>
+            {waiting && <CircularProgress size={24} className={classes.buttonProgress} />}
           </Box>
           <Typography color="textSecondary">
             Have an account?{' '}

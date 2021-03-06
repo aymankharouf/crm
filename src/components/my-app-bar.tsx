@@ -107,7 +107,7 @@ const MyAppBar = () => {
                 <MenuItem onClick={handleLogout}>Logout</MenuItem>
               </Menu>
             </div>
-          ) : <Button color="inherit" onClick={() => history.push('/login')}>Login</Button>}
+          ) : <Button color="inherit" aria-label="login" onClick={() => history.push('/login')}>Login</Button>}
         </Toolbar>
       </AppBar>
       <Drawer open={drawerOpen} onClose={() => setDrawerOpen(!drawerOpen)}>

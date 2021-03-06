@@ -1,48 +1,37 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom'
 import Login from './login'
+import App from '../app'
 import userEvent from '@testing-library/user-event';
-import { rest } from 'msw'
-import { setupServer } from "msw/node";
+import { rest, server } from '../test-server'
 
-const server = setupServer(
-  rest.get('http://localhost:5000/api/auth', (req, res, ctx) => {
-    return res(ctx.json({ greeting: 'hello there' }))
-  })
-)
-
-beforeAll(() => server.listen())
-afterEach(() => server.resetHandlers())
-afterAll(() => server.close())
-
-test('when rendering login page the button should be disabled', () => {
+test('login: when rendering the page the button should be disabled', () => {
   render(
     <MemoryRouter>
       <Login />
     </MemoryRouter>
   )
-  expect(screen.getByTestId('button')).toBeDisabled()
+  expect(screen.getByRole('button', {name: /sign in/i})).toBeDisabled()
 });
 
-test('after entering a value in email & password the button should be enabled', () => {
+test('login: after entering a value in email & password the button should be enabled', () => {
   render(
     <MemoryRouter>
       <Login />
     </MemoryRouter>
   )
-  const email = screen.getByTestId('email').querySelector('input')
-  const password = screen.getByTestId('password').querySelector('input')
-  fireEvent.change(email!, {target: {value: 'aw'}})
-  fireEvent.change(password!, {target: {value: '123'}})
-  expect(screen.getByTestId('button')).toBeEnabled()
+  const email = screen.getByLabelText('email').querySelector('input')!
+  const password = screen.getByLabelText('password').querySelector('input')!
+  userEvent.type(email, 'aw@tt.com')
+  userEvent.type(password, '123')
+  expect(screen.getByRole('button', {name: /sign in/i})).toBeEnabled()
 });
 
-test('after entering a short value in email an error popup', async () => {
+test('login: failing the login process', async () => {
   server.use(
     rest.post('http://localhost:5000/api/auth/login', (req, res, ctx) => {
       return res(
-        ctx.status(404),
-        ctx.json({errors: {email: 'email is not registered'}})
+        ctx.status(401)
       )
     })
   )
@@ -51,15 +40,39 @@ test('after entering a short value in email an error popup', async () => {
       <Login />
     </MemoryRouter>
   )
-  const email = screen.getByTestId('email').querySelector('input')!
-  const password = screen.getByTestId('password').querySelector('input')!
-  const button = screen.getByTestId('button')
+  const email = screen.getByLabelText('email').querySelector('input')!
+  const password = screen.getByLabelText('password').querySelector('input')!
+  const button = screen.getByRole('button', {name: /sign in/i})
   userEvent.type(email, 'aw@tt.com')
+  userEvent.type(password, '123')
+  userEvent.click(button)
+  expect(await screen.findByText('Login Failed')).toBeInTheDocument();
+});
+
+test('login: succeeding the login process', async () => {
+  server.use(
+    rest.post('http://localhost:5000/api/auth/login', (req, res, ctx) => {
+      return res(
+        ctx.status(200),
+        ctx.json({user: '', token: ''})
+      )
+    })
+  )
+  render(
+    <MemoryRouter>
+      <App />
+    </MemoryRouter>
+  )
+  userEvent.click(screen.getByLabelText('login'))
+  expect(await screen.findAllByText(/sign in/i)).toHaveLength(2)
+  const email = screen.getByLabelText('email').querySelector('input')!
+  const password = screen.getByLabelText('password').querySelector('input')!
+  const button = screen.getByRole('button', {name: /sign in/i})
+  userEvent.type(email, 'test@gmail.com')
   userEvent.type(password, '123')
   expect(button).toBeEnabled()
   userEvent.click(button)
-  expect(await screen.findByText('email is not registered')).toBeInTheDocument();
+  expect(await screen.findByText(/home page/i)).toBeInTheDocument();
 });
-
 
 

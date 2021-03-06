@@ -2,7 +2,7 @@ import { rest } from "msw";
 import { setupServer } from "msw/node";
 
 const server = setupServer(
-  rest.get("http://localhost:5000/api/auth", (_req, res, ctx) => {
+  rest.get("http://localhost:5000/api/auth", (_, res, ctx) => {
     return res(ctx.status(200), ctx.json({greeting: 'hello there'}));
   }),
   rest.get("*", (req, res, ctx) => {
